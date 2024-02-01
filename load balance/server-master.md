@@ -1,11 +1,11 @@
-#Config for server master
+# Config for server master
 
-###Installation
+### Installation
 ```
 # apt install postgresql-13 pgpool2 -y
 ```
 
-###Edit file postgresql.conf
+### Edit file postgresql.conf
 ```
 # vim /etc/postgresql/13/main/postgresql.conf
 
@@ -17,7 +17,7 @@ wal_log_hints = on
 synchronous_standby_names = '*'
 ```
 
-###Edit file pg_hba.conf
+### Edit file pg_hba.conf
 ```
 # vim /etc/postgresql/13/main/pg_hba.conf
 
@@ -26,7 +26,7 @@ host    replication     rep_user        172.23.3.12/32          md5
 host    all             rep_user        0.0.0.0/0               md5
 ```
 
-###Edit file pgpool.conf
+### Edit file pgpool.conf
 ```
 # vim /etc/pgpool2/pgpool.conf
 
@@ -55,7 +55,7 @@ health_check_user = 'rep_user'
 health_check_password = 'admin123'
 ```
 
-###Create user replication
+### Create user replication
 ```
 # su - postgres
 $ createuser --replication -P rep_user
