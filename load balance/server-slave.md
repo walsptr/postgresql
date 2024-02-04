@@ -48,5 +48,16 @@ tambahkan parameter application_name pada baris terakhir
 ```
 # vim /var/lib/postgresql/16/main/postgresql.auto.conf
 
-primary_conninfo = 'user=rep_user password=password host=<ip server master> port=5432 sslmode=prefer sslcompression=0 gssencmode=prefer krbsrvname=postgres target_session_attrs=any application_name=server-slave'
+primary_conninfo = 'user=repl password=password host=<ip server master> port=5432 sslmode=prefer sslcompression=0 gssencmode=prefer krbsrvname=postgres target_session_attrs=any application_name=server-slave'
+```
+
+### testing load balance
+```
+# su - postgres
+$ psql
+$ create table test (a int)
+
+$ for i in `seq 1 100` ; do psql -p <port pgpool> -c 'select count(*) from test' postgres ; done
+
+$ psql -h <ip-server primary> -p <port pgpool> -U repl postgres -c "show pool_backend_stats"
 ```
