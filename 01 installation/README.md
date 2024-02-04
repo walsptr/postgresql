@@ -13,4 +13,5 @@ apt-get -y install postgresql
 ```
 su - postgres
 echo echo PATH=/usr/lib/postgresql/16/bin:$PATH >> ~/.bashrc
+source ~/.bashrc
 ```
