@@ -169,7 +169,8 @@ log_filename = 'pgpool-%Y-%m-%d_%H%M%S.log'
 log_truncate_on_rotation = on
 log_rotation_age = 1d
 log_rotation_size = 10MB
-
+log_statement = on
+log_per_node_statement = on
 ```
 
 ### Create and chown failover.sh and follow_primary.sh on all server
