@@ -7,8 +7,8 @@ apt install postgresql-16-pgpool2 postgresql-16-pg-failover-slots sudo pgpool2 -
 
 ### Create archive dir for archive mode on all server
 ```
-# mkdir -p /var/lib/pgsql/archivedir
-# chown -R postgres:postgres /var/lib/pgsql/archivedir
+# mkdir -p /var/lib/postgresql/16/archive
+# chown -R postgres:postgres /var/lib/postgresql/16/archive
 ```
 
 ### Edit file posgresql.conf on server master

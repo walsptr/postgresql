@@ -2,28 +2,33 @@
 
 ### Installation
 ```
-# apt install postgresql-13 pgpool2 -y
+# apt install postgresql-16 pgpool2 -y
 ```
 
 ### Edit file postgresql.conf
 ```
-# vim /etc/postgresql/13/main/postgresql.conf
+# vim /etc/postgresql/16/main/postgresql.conf
 
 listen_addresses = '*'
 port = 5432
 wal_level = replica
-synchronous_commit = remote_apply
 wal_log_hints = on
-synchronous_standby_names = '*'
+archive_mode = on
+archive_command = 'cp %p /var/lib/postgresql/16/archive/%f'
+```
+
+### create archive dir
+```
+# mkdir -p /var/lib/postgresql/16/archive
+# chown -R postgres:postgres /var/lib/postgresql/16/archive
 ```
 
 ### Edit file pg_hba.conf
 ```
-# vim /etc/postgresql/13/main/pg_hba.conf
+# vim /etc/postgresql/16/main/pg_hba.conf
 
-host    replication     rep_user        172.23.3.11/32          md5
-host    replication     rep_user        172.23.3.12/32          md5
-host    all             rep_user        0.0.0.0/0               md5
+host    replication     all             0.0.0.0/0               scram-sha-256
+host    all             all             0.0.0.0/0               scram-sha-256
 ```
 
 ### Edit file pgpool.conf
@@ -31,27 +36,30 @@ host    all             rep_user        0.0.0.0/0               md5
 # vim /etc/pgpool2/pgpool.conf
 
 listen_addresses = '*'
-port = 5433
+port = 9999
 
-backend_hostname0 = 'localhost'
+backend_hostname0 = 'psql1'
 backend_port0 = 5432
 backend_weight0 = 0
-backend_data_directory0 = '/var/lib/postgresql/13/main'
+backend_data_directory0 = '/var/lib/postgresql/16/main'
 backend_flag0 = 'DISALLOW_TO_FAILOVER'
 backend_application_name0 = 'primary'
 
-backend_hostname1 = '172.23.3.12'
+backend_hostname1 = 'psql2'
 backend_port1 = 5432
 backend_weight1 = 1
-backend_data_directory1 = '/var/lib/postgresql/13/main'
+backend_data_directory1 = '/var/lib/postgresql/16/main'
 backend_flag1 = 'DISALLOW_TO_FAILOVER'
 backend_application_name1 = 'replica'
 
+enable_pool_hba = on
 load_balance_mode = on
-sr_check_user = 'rep_user'
-sr_check_password = 'admin123'
-health_check_user = 'rep_user'
-health_check_password = 'admin123'
+sr_check_user = 'repl'
+sr_check_password = ''
+health_check_period = 10
+health_check_timeout = 30
+health_check_user = 'repl'
+health_check_password = ''
 ```
 
 ### Create user replication
@@ -60,4 +68,21 @@ health_check_password = 'admin123'
 $ createuser --replication -P rep_user
 $ exit
 # systemctl restart postgresql
+```
+
+### edit pool_hba
+```
+vim /etc/pgpool2/pool_hba.conf
+
+host    all         repl        0.0.0.0/0        scram-sha-256
+```
+
+### create pgpoolkey for pool_hba auth
+```
+# su - postgres
+$ echo 'some string' > ~/.pgpoolkey
+$ chmod 600 ~/.pgpoolkey
+$ exit
+# pg_enc -m -k /var/lib/postgresql/.pgpoolkey -u repl -p
+# cat /etc/pgpool2/pool_passwd
 ```
