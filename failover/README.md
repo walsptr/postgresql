@@ -74,10 +74,8 @@ $ vim /var/lib/postgresql/.pgpass
 
 server1:5432:replication:repl:<repl user password>
 server2:5432:replication:repl:<repl user password>
-server3:5432:replication:repl:<repl user password>
 server1:5432:postgres:postgres:<postgres user password>
 server2:5432:postgres:postgres:<postgres user password>
-server3:5432:postgres:postgres:<postgres user password>
 $ chmod 600 /var/lib/postgresql/.pgpass
 ```
 

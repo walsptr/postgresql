@@ -66,6 +66,7 @@ health_check_password = ''
 ```
 # su - postgres
 $ createuser --replication -P rep_user
+$ createuser --superuser -P admin
 $ exit
 # systemctl restart postgresql
 ```
@@ -75,6 +76,7 @@ $ exit
 vim /etc/pgpool2/pool_hba.conf
 
 host    all         repl        0.0.0.0/0        scram-sha-256
+host    all         admin       0.0.0.0/0        scram-sha-256
 ```
 
 ### create pgpoolkey for pool_hba auth
@@ -84,5 +86,6 @@ $ echo 'some string' > ~/.pgpoolkey
 $ chmod 600 ~/.pgpoolkey
 $ exit
 # pg_enc -m -k /var/lib/postgresql/.pgpoolkey -u repl -p
+# pg_enc -m -k /var/lib/postgresql/.pgpoolkey -u admin -p
 # cat /etc/pgpool2/pool_passwd
 ```
