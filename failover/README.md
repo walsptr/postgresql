@@ -17,7 +17,7 @@ apt install postgresql-16-pgpool2 postgresql-16-pg-failover-slots sudo pgpool2 -
 
 listen_addresses = '*'
 archive_mode = on
-archive_command = 'cp "%p" "/var/lib/pgsql/archivedir/%f"'
+archive_command = 'cp %p /var/lib/postgresql/16/archive/%f'
 wal_level = replica
 hot_standby = on
 wal_log_hints = on

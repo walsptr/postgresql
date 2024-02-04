@@ -48,7 +48,6 @@ backend_flag1 = 'DISALLOW_TO_FAILOVER'
 backend_application_name1 = 'replica'
 
 load_balance_mode = on
-master_slave_mode = on
 sr_check_user = 'rep_user'
 sr_check_password = 'admin123'
 health_check_user = 'rep_user'
