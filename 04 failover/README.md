@@ -228,7 +228,7 @@ copy file escalation.sh and chown
 # chown postgres:postgres /etc/pgpool2/escalation.sh
 ```
 
-### create directory logging on al server
+### create directory logging on all server
 ```
 # mkdir /var/log/pgpool_log/
 # chown postgres:postgres /var/log/pgpool_log/
